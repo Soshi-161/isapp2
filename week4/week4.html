@@ -14,19 +14,32 @@
             var userid = document.getElementById('tf1').value;
             var tweet = document.getElementById('tf2').value;
 
-            var sql = `insert into Tweets (name, tweet, time) values("${userid}", "${tweet}", now());`;
+
+            var sql = tweet.length <= 0 ? 'select * from Tweets order by time desc limit 20' :`insert into Tweets (name, tweet, time) values("${userid}", "${tweet}", now());`;
             var objects = await osql.connect(sql);
             console.log(objects);
 
             alert("tweetしました");
+
+            document.getElementById('tf2').value = ''; // Clear the tweet input field after sending
         }
 
-        function button1Pressed() {
-            doSelect();
+        const searchButtonPressed = async () => {
+            var search = document.getElementById('search').value;
+            var sql = `select * from Tweets where tweet like "%${search}%" order by time desc limit 20`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+            var html = '';
+            html = html + '<table style="border-collapse: collapse; width: 100%;">';
+            for (object of objects) {
+                html = html + '<tr><td style="padding: 8px;">' + object.name + '</td><td style="padding: 8px;">' + object.tweet + '</td><td style="padding: 8px; color: #777;">(' + object.time + ')</td></tr>';
+            }
+            html = html + '</table>';
+            document.getElementById('searchResult').innerHTML = html;
         }
 
         async function doSelect() {
-            var sql = 'select * from Tweets order by time desc limit 20';
+            var sql = 'select * from Tweets order by time desc limit 10';
             var objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
@@ -38,9 +51,11 @@
             document.getElementById('result').innerHTML = html;
         }
 
+        timer = null;
+
         $().ready(function () {
             doSelect();
-            setInterval(doSelect, 2000);
+            timer = setInterval(doSelect, 2 * 1000);
         });
 
 
@@ -50,16 +65,24 @@
 
 <body>
     <h1>Tweets</h1>
+
+    <h2>つぶやく</h2>
     <br>
     名前:<input id="tf1" value="名無し" type="textfield">
     <br>
     tweet:<input id="tf2" type="textfield">
     <button onclick="tweetButtonPressed()">tweet</button>
     <br>
+    <h2>フィード</h2>
     <hr>
-    <p id="result">xxxx</p>
+    <p id="result">xxxx</p><br>
+    <h2>探す</h2>
+    <input id="search" type="textfield" placeholder="検索">
+    <button onclick="searchButtonPressed()">search</button>
+    <p id="searchResult"></p>
+
 
     
 </body>
 
-</html>
+</html></body></div></div></div>
