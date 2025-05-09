@@ -12,11 +12,42 @@
         osql.requireLogin();//すべてのページに入れる．google認証をして，osql.connect()や，osql.getMe()を使えるようにしてくれる．
     </script>
 
+    <script>
+        const handleLinkToUpdate = () => {
+            location.href = 'update.html?userid=' + sessionStorage.getItem('userid');
+            console.log('update.html?userid=' + sessionStorage.getItem('userid'));
+        }
+
+        $().ready(() => {
+            const userId = sessionStorage.getItem('userid');
+            const userName = sessionStorage.getItem('username');
+
+            if (userId == null || userName == null) {
+                alert("不正なユーザー情報です");
+                location.href = 'index.html';
+            } else {
+                const hour = new Date().getHours();
+                let greeting;
+                
+                if (hour >= 5 && hour < 12) {
+                    greeting = "おはようございます";
+                } else if (hour >= 12 && hour < 18) {
+                    greeting = "こんにちは";
+                } else {
+                    greeting = "こんばんは";
+                }
+                
+                document.getElementById('welcome').innerHTML = greeting + userName + "さん";
+            }
+        })
+    </script>
+
 </head>
 
 <body>
     <h1>ユーザトップ</h1>
-    <p id="welcome">ようこそxxさん</p>
+    <p id="welcome"></p>
+    <button onclick=handleLinkToUpdate()>登録情報変更はこちら</button>
     <hr>
 
 </body>

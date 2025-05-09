@@ -15,9 +15,19 @@
             var tweet = document.getElementById('tf2').value;
 
 
-            var sql = tweet.length <= 0 ? 'select * from Tweets order by time desc limit 20' :`insert into Tweets (name, tweet, time) values("${name}", "${tweet}", now());`;
+            var sql = `insert into Tweets (name, tweet, time) values("${name}", "${tweet}", now());`;
+            
+            if (tweet.length > 140) {
+                alert("140文字以内でつぶやいてください");
+                return;
+            } else if (tweet.length == 0) {
+                alert("つぶやく内容を入力してください");
+                return;
+            } else if (name.length == 0) {
+                alert("名前を入力してください");
+                return;
+            }
             var objects = await osql.connect(sql);
-            console.log(objects);
 
             alert("tweetしました");
 

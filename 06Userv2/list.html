@@ -32,12 +32,27 @@
             html = html + '</table>';
             document.getElementById('result').innerHTML = html;
         }
+
+        async function execDelete() {
+            var userId = document.getElementById('id').value;
+            if (userId == '') {
+                alert('IDを入力してください');
+                return;
+            } else {
+                var sql = `DELETE FROM Users WHERE id = "${userId}"`;
+                var objects = await osql.connect(sql);
+                console.log(sql);
+                console.log(objects);
+                execSelect();
+            }
+        }
     </script>
 
 </head>
 
 <body>
     <h1>Users</h1>
+    <a>ID: </a><input id="id"><button onclick="execDelete()">削除</button>
     <p id="result">xxxx</p>
 </body>
 
