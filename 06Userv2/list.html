@@ -27,23 +27,30 @@
                 html = html + '<td>' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + '<a href="update.html?userid=' + object.id + '">変更</a>' + '</td>';
+                html = html + '<td>' + `<button onclick="deleteUser('${object.id}')">削除</button>` + '</td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
             document.getElementById('result').innerHTML = html;
         }
 
-        async function execDelete() {
-            var userId = document.getElementById('id').value;
-            if (userId == '') {
-                alert('IDを入力してください');
-                return;
-            } else {
+        async function deleteUser(userId) {
+            if (window.confirm(`本当に削除しますか？ id=${userId}`)) {
                 var sql = `DELETE FROM Users WHERE id = "${userId}"`;
                 var objects = await osql.connect(sql);
                 console.log(sql);
                 console.log(objects);
                 execSelect();
+            }
+        }
+
+        async function handleDeleteButtonPress() {
+            var userId = document.getElementById('id').value;
+            if (userId == '') {
+                alert('IDを入力してください');
+                return;
+            } else {
+                deleteUser(userId);
             }
         }
     </script>
@@ -52,7 +59,7 @@
 
 <body>
     <h1>Users</h1>
-    <a>ID: </a><input id="id"><button onclick="execDelete()">削除</button>
+    <a>ID: </a><input id="id"><button onclick="handleDeleteButtonPress()">削除</button>
     <p id="result">xxxx</p>
 </body>
 
